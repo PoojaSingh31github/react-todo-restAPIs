@@ -1,0 +1,124 @@
+~~~~~~ Assignment 2nd (Connecting Frontend to Backend using React and RESTful APIs assignment) ~~~~~~~
+____________________________________________________________________________________________________________________
+ 
+ Backend :-
+----------
+
+all packages need here:-
+```````````````````````
+
+1) "body-parser":- body-parser is a Node.js middleware that's commonly used to parse incoming request bodies in middleware before your handlers, available through the express web framework or as standalone middleware in other frameworks.
+
+2) "cors":- Cross-Origin Resource Sharing (CORS) is a security feature that allows controlled access to resources from different origins. The cors module in Node.js is middleware used with frameworks like Express to enable CORS handling in web applications.
+
+3) "express":- Express is a fast, unopinionated, and minimalist web framework for Node.js that provides a robust set of features to build web applications and APIs.
+
+4) "node-persist":- node-persist is a simple filesystem-based persistence module for Node.js applications. It allows you to store and retrieve data persistently across application sessions.
+
+====================================================================================================================
+
+About APIs:-
+`````````````
+
+1)app.post("/addtask") :-
+======================
+* Path: /addtask
+* Method: POST
+* Middleware: jsonParser (assumed to be a middleware that parses incoming JSON payloads)
+* Purpose: This API endpoint is used to add a new task.
+* Explanation:-
+--------------
+-> The API expects a JSON payload with a structure that contains a field named task.
+-> When a POST request is sent to /addtask, it first goes through the jsonParser middleware, which parses the incoming JSON data and makes it available in req.body.
+-> It extracts the task field from the request body using destructuring: const { task } = req.body;.
+-> It logs the entire req.body to the console.
+-> Then, it uses Storage.setItem() (assuming it's part of a persistent storage module like node-persist) to store the task with the key being the value of task. It appears that the value stored is an object with a property also named task.
+-> Finally, it sends a response back with the message "task send successfully".
+
+2)app.get("/alltask"):-
+======================
+* Path: /alltask
+* Method: GET
+* Purpose: This API endpoint retrieves all tasks that have been previously added.
+* Explanation:-
+--------------
+-> When a GET request is made to /alltask, it fetches all tasks stored in the storage (assuming Storage.values() retrieves all stored values).
+-> It uses await Storage.values() to asynchronously retrieve all the stored values (tasks) from the storage.
+-> Then, it sends a JSON response containing all the fetched tasks using res.json(task).
+
+====================================================================================================================
+
+About PORT:-
+```````````
+
+this code initializes an Express server and starts it on port 5000. Upon successful initiation, it logs a message to the console indicating that the server has started. This is a common pattern in Node.js applications using Express to begin listening for incoming requests on a specified port.
+
+____________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________
+
+
+Frontend:-
+---------
+package needed here:-
+`````````````````````
+
+1) axios:- Axios simplifies the process of making HTTP requests by providing a clean and easy-to-use interface, handling responses, errors, and configurations effectively. Its versatility and features make it a preferred choice for many developers when working with HTTP-based communication in both frontend and backend applications.
+
+====================================================================================================================
+
+APIs integration:-
+``````````````````
+
+1. Fetching Tasks (fetchTasks function):-
+======================================
+* Purpose: This function is responsible for retrieving tasks from the server using a GET request.
+
+* Explanation:-
+--------------
+-> axios.get('http://localhost:5000/alltask'): Sends a GET request to http://localhost:5000/alltask to fetch tasks.
+const response = await axios.get(...): Awaits the response from the server.
+-> console.log(response): Logs the entire response object to the console, which includes data like status, headers, and the response body.
+-> setTasks(response.data): Sets the tasks state (presumably using React's useState) with the data received from the server's response.
+-> try { ... } catch (error) { ... }: Implements error handling for any issues encountered during the request.
+
+2. Adding a Task (handleAddTask function):-
+========================================
+* Purpose: This function handles adding a new task to the server using a POST request.
+
+* Explanation:-
+--------------
+-> if (inputText.trim() !== '') { ... }: Checks if the inputText (presumably a form input) is not an empty string or just spaces.
+-> await axios.post('http://localhost:5000/addtask', { task: inputText }): Sends a POST request to http://localhost:5000/addtask, including the inputText as the task field in the request body.
+-> await axios.post(...) and await fetchTasks(): Awaits the completion of the POST request and then fetches the updated list of tasks using the fetchTasks function, updating the UI with the new list.
+-> try { ... } catch (error) { ... }: Implements error handling for any issues encountered during the request.
+
+====================================================================================================================
+
+About CSS:-
+``````````
+
+1) General Reset:- '*' Sets default styling to zero for all elements, removing margin and padding.
+
+2) Body Styles:- 'body' Sets the background color to a light purple shade (#c786bd) and defines a font family for the entire page.
+
+3) Container Styles:-'main-container' Sets margins around the main content, aligns content to the center vertically and horizontally, and sets the height to 100% of the viewport height (100vh).
+
+4) Input and Heading Styles:-'app-heading' Styles the heading text with a specific color, padding, and a different font family. 'input-box-todo' Styles an input box intended for adding tasks with specific width, height, border radius, border, padding, and shadow. Sets the font size to large.
+
+5) Button Styles:- 'add-btn' Styles the "Add" button with a circular shape, specific dimensions, colors, fonts, margins, cursor behavior, and box-shadow for hover effect.
+
+6) List Item Styles:'list-item' Styles list items (tasks) with specific background color, border, text color, padding, border-radius, width, height, display, alignment, and margin.
+
+7)Icons Styles:'icons' Styles the icons used within list items with specific color and position.
+
+8) Hover Effects:'h3 i:hover' Defines a hover effect for specific icons within <h3> elements, changing the color and cursor appearance on hover.
+
+9) Transition Effects:'add-btn and h3 i' Specifies transition effects on certain elements for a smooth change in appearance (transition: 0.3s).
+
+====================================================================================================================
+
+Hooks:-
+```````
+1) UseState Hook:- useState manages component state, re-renders components on state changes, and provides a way to update state.
+
+2) UseEffect Hook:- useEffect handles side effects in functional components, allowing for operations that don't directly affect the UI but are essential for data fetching, subscriptions, and more.
